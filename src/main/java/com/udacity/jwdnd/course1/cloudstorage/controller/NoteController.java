@@ -22,14 +22,14 @@ public class NoteController {
 
     @PostMapping
     public String addNote(Authentication authentication, Note note, Model model) {
-        note.setUserId(userService.getUser(authentication.getName()).getUserId());
+        Integer userId = userService.getUser(authentication.getName()).getUserId();
+        note.setUserId(userId);
         Integer count = this.noteService.addOrUpdateNote(note);
         if(count > 0 ){
             model.addAttribute("successMessage", true);
         }else
             model.addAttribute("errorMessage", true);
-        //chatForm.setMessageText("");
-        model.addAttribute("notes", this.noteService.getAllNotes());
+
         return "result";
     }
 
@@ -41,7 +41,7 @@ public class NoteController {
             model.addAttribute("successMessage", true);
         }else
             model.addAttribute("errorMessage", true);
-        model.addAttribute("notes", this.noteService.getAllNotes());
+
         return "result";
     }
 }

@@ -57,4 +57,8 @@ public class CredentialService {
         }
         return credentials;
     }
+
+    public List<Credential> getCredentialsByUserId(Integer userId) {
+        return credentialMapper.getCredentialsByUserId( userId);
+    }
 }

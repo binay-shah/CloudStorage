@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
@@ -32,20 +33,19 @@ public class CredentialController {
             model.addAttribute("successMessage", true);
         }else
             model.addAttribute("errorMessage", true);
-        //chatForm.setMessageText("");
-        model.addAttribute("credentials", this.credentialService.getAllCredentials());
+
         return "result";
     }
 
     @PostMapping("/{credentialId}")
-    public String deleteCredential(@PathVariable("credentialId") String noteId, Credential credential, Model model) {
-        Integer id = Integer.parseInt(noteId);
+    public String deleteCredential(@PathVariable("credentialId") String credentialId,  Credential credential, Model model) {
+        Integer id = Integer.parseInt(credentialId);
         Integer count = this.credentialService.deleteCredential(id);
         if(count > 0 ){
             model.addAttribute("successMessage", true);
         }else
             model.addAttribute("errorMessage", true);
-        model.addAttribute("credentials", this.credentialService.getAllCredentials());
+
         return "result";
     }
 }

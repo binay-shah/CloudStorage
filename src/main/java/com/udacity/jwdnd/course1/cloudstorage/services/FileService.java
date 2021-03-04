@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,12 @@ public class FileService {
         System.out.println("Creating FileService bean");
     }
 
+    public File findFile(Integer fileId) {
+        return fileMapper.findFile(fileId);
+    }
+
     public Integer addFile(File file) {
-       return null;
+       return fileMapper.insert(file);
     }
 
     public Integer deleteFile(Integer id) {
@@ -34,5 +39,9 @@ public class FileService {
 
     public List<File> getAllFiles() {
         return fileMapper.getAllFiles();
+    }
+
+    public List<File> getFilesByUserId(Integer userId) {
+        return fileMapper.getFilesByUserId( userId);
     }
 }

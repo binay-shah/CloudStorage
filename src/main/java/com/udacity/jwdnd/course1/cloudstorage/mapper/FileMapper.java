@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.mapper;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import org.apache.ibatis.annotations.*;
@@ -12,13 +13,16 @@ public interface FileMapper {
     @Select("SELECT * FROM Files")
     List<File> getAllFiles();
 
-    @Select("SELECT * FROM File WHERE fileId = #{id}")
+    @Select("SELECT * FROM Files where userid = #{userId}")
+    List<File> getFilesByUserId(Integer userId);
+
+    @Select("SELECT * FROM Files WHERE fileId = #{id}")
     File findFile(Integer id);
 
-    @Insert("INSERT INTO Note (filename, contenttype, filesize, userid, filedata) VALUES( #{fileName}), #{contentType}, #{fileSize}, #{userID}, #{fileData}")
+    @Insert("INSERT INTO files (filename, contenttype, filesize, userid, filedata) VALUES( #{fileName}, #{contentType}, #{fileSize}, #{userId}, #{fileData})")
     @Options(useGeneratedKeys = true, keyProperty = "fileId")
     Integer insert(File file);
 
-    @Delete("DELETE FROM File WHERE fileId = #{fileId}")
+    @Delete("DELETE FROM Files WHERE fileid = #{fileId}")
     Integer delete(Integer fileId);
 }
