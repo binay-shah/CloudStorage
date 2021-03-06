@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.pages.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -12,51 +13,23 @@ import org.springframework.boot.web.server.LocalServerPort;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CredentialTests {
 
-    @LocalServerPort
-    public  int port;
-
-    public   WebDriver driver;
-
-    public  String baseURL;
-
-    CredentialPage credentialPage;
-
-    ResultPage resultPage;
-
-
-    @BeforeAll
-    public static void beforeAll(){
-        WebDriverManager.chromedriver().setup();
-
+    public CredentialTests(WebDriver driver){
+        this.driver = driver;
+        credentialPage = new CredentialPage(driver);
     }
 
-    @AfterEach
-    public  void afterEach(){
-        driver.quit();
-        driver = null;
-    }
+    public static WebDriver driver;
 
-    @BeforeEach
-    public void beforeEach(){
-        driver = new ChromeDriver();
-        String firstName = "binay";
-        String lastName = "shah";
-        String useranme = "ecofresh";
-        String password = "12345";
+    public String baseURL;
 
-        baseURL = "http://localhost:"+port;
-        driver.get(baseURL + "/signup");
-        SignupPage signupPage = new SignupPage(driver);
-        signupPage.signup(firstName, lastName, useranme, password);
+    public CredentialPage credentialPage;
 
-        driver.get(baseURL + "/login");
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.login(useranme, password);
-    }
+    public ResultPage resultPage;
+
+
+
 
     @Test
     @Order(1)
@@ -123,13 +96,13 @@ public class CredentialTests {
       credentialPage.clickDeleteCredentialButton();
 
       assertThrows(NoSuchElementException.class, () -> {
-          credentialPage.getUrlCredentialText();
+          driver.findElement(By.className("urlCredential"));
       });
       assertThrows(NoSuchElementException.class, () -> {
-          credentialPage.getUsernameCredentialText();
+          driver.findElement(By.className("usernameCredentialText"));
       });
       assertThrows(NoSuchElementException.class, () -> {
-          credentialPage.getPasswordCredentialText();
+          driver.findElement(By.className("passwordCredential"));
       });
 
   }

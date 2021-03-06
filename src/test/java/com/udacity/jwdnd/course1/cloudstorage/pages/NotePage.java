@@ -54,7 +54,8 @@ public class NotePage {
     }
 
     public void clickNotesTab(WebDriver webDriver){
-        wait.until(ExpectedConditions.elementToBeClickable(notesTab)).click();
+        //wait.until(ExpectedConditions.elementToBeClickable(notesTab)).click();
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", notesTab);
     }
 
     public void clickAddNote(){

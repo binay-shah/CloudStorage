@@ -59,6 +59,11 @@ public class CredentialService {
     }
 
     public List<Credential> getCredentialsByUserId(Integer userId) {
-        return credentialMapper.getCredentialsByUserId( userId);
+
+        List<Credential> credentials  = credentialMapper.getCredentialsByUserId(userId);
+        for(Credential credential: credentials){
+            credential.setDecryptedPassword(encryptionService.decryptValue(credential.getPassword(), credential.getKey()));
+        }
+        return credentials;
     }
 }

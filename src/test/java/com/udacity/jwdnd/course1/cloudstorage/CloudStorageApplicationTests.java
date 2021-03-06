@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CloudStorageApplicationTests {
 
 	@LocalServerPort
@@ -41,6 +42,7 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
+	@Order(2)
 	public void testUnauthorizedUsers() throws InterruptedException {
 		driver.get(baseURL + "/login");
 		assertEquals("Login", driver.getTitle());
@@ -50,7 +52,17 @@ class CloudStorageApplicationTests {
 		assertEquals("Login", driver.getTitle());
 	}
 
+	public void login() throws InterruptedException {
+		String username= "bishah";
+		String password = "12345";
+		driver.get(baseURL + "/login");
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(username, password);
+
+	}
+
 	@Test
+	@Order(1)
 	public void testUserSignupLoginAndLogout() throws InterruptedException {
 		String firstName = "binay";
 		String lastName = "shah";
@@ -62,9 +74,7 @@ class CloudStorageApplicationTests {
 		SignupPage signupPage = new SignupPage(driver);
 		signupPage.signup(firstName, lastName, username, password);
 		Thread.sleep(1000);
-		driver.get(baseURL + "/login");
-		LoginPage loginPage = new LoginPage(driver);
-		loginPage.login(username, password);
+		login();
 		Thread.sleep(1000);
 		assertEquals("Home", driver.getTitle());
 		Thread.sleep(1000);
@@ -75,6 +85,30 @@ class CloudStorageApplicationTests {
 
 	}
 
+	@Test
+	@Order(3)
+	public void testNote() throws InterruptedException {
+		Thread.sleep(3000);
+		login();
+		Thread.sleep(3000);
+		NoteTests noteTests = new NoteTests(driver);
+		noteTests.testCreateNote();
+		noteTests.testEditNote();
+		noteTests.testDeleteNote();
+	}
+
+
+	@Test
+	@Order(4)
+	public void testCredential() throws InterruptedException {
+		Thread.sleep(3000);
+		login();
+		Thread.sleep(3000);
+		CredentialTests credentialTests = new CredentialTests(driver);
+		credentialTests.testCreateCredential();
+		credentialTests.testEditCredential();
+		credentialTests.testDeleteCredential();
+	}
 
 
 }

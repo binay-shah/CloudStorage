@@ -30,9 +30,9 @@ public class CredentialController {
         credential.setUserId(userService.getUser(authentication.getName()).getUserId());
         Integer count = this.credentialService.addOrUpdateCredential(credential);
         if(count > 0 ){
-            model.addAttribute("successMessage", true);
+            model.addAttribute("success", true);
         }else
-            model.addAttribute("errorMessage", true);
+            model.addAttribute("error", true);
 
         return "result";
     }
@@ -42,9 +42,9 @@ public class CredentialController {
         Integer id = Integer.parseInt(credentialId);
         Integer count = this.credentialService.deleteCredential(id);
         if(count > 0 ){
-            model.addAttribute("successMessage", true);
+            model.addAttribute("success", true);
         }else
-            model.addAttribute("errorMessage", true);
+            model.addAttribute("error", true);
 
         return "result";
     }

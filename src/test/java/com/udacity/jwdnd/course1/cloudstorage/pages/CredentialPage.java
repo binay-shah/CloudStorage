@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.pages;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -58,8 +59,9 @@ public class CredentialPage {
     private WebDriver webDriver;
 
     public CredentialPage(WebDriver webDriver) {
-        PageFactory.initElements(webDriver, this);
         this.webDriver = webDriver;
+        PageFactory.initElements(webDriver, this);
+
     }
 
     public void clickAddNewCredentialButton(){
@@ -78,34 +80,33 @@ public class CredentialPage {
     }
 
     public void createCredential(String url, String username, String password){
-        WebDriverWait wait = new WebDriverWait(webDriver, 50);
-        wait.until(ExpectedConditions.visibilityOf(this.urlField)).sendKeys(url);
-        wait.until(ExpectedConditions.visibilityOf(this.usernameField)).sendKeys(username);
-        wait.until(ExpectedConditions.visibilityOf(this.passwordField)).sendKeys(password);
-        wait.until(ExpectedConditions.elementToBeClickable(this.submitButton)).click();
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='"+ url +"';", urlField);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='"+ username +"';", usernameField);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='"+ password +"';", passwordField);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", submitButton);
     }
 
     public void editCredential(String url, String username, String password){
         WebDriverWait wait = new WebDriverWait(webDriver, 50);
         wait.until(ExpectedConditions.visibilityOf(this.urlField)).clear();
-        wait.until(ExpectedConditions.visibilityOf(this.usernameField)).clear();
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='';", usernameField);
         wait.until(ExpectedConditions.visibilityOf(this.passwordField)).clear();
-        wait.until(ExpectedConditions.visibilityOf(this.urlField)).sendKeys(url);
-        wait.until(ExpectedConditions.visibilityOf(this.usernameField)).sendKeys(username);
-        wait.until(ExpectedConditions.visibilityOf(this.passwordField)).sendKeys(password);
-        wait.until(ExpectedConditions.elementToBeClickable(this.submitButton)).click();
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='"+ url +"';", urlField);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='"+ username +"';", usernameField);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='"+ password +"';", passwordField);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", submitButton);
+
+
+
     }
 
     public Credential getCredential(){
+        WebDriverWait wait = new WebDriverWait(webDriver, 50);
         Credential credential = new Credential();
-        credential.setUrl(urlCredentialText.getText());
-        credential.setUsername(usernameCredentialText.getText());
-        credential.setPassword(passwordCredentialText.getText());
+        credential.setUrl( wait.until(ExpectedConditions.visibilityOf(this.urlCredentialText)).getText());
+        credential.setUsername(wait.until(ExpectedConditions.visibilityOf(this.usernameCredentialText)).getText());
+        credential.setPassword(wait.until(ExpectedConditions.visibilityOf(this.passwordCredentialText)).getText());
         return credential;
     }
-
-
-
-
 
 }

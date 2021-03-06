@@ -40,45 +40,45 @@ public class FileUploadController {
     public String deleteFile(@PathVariable("fileId") String fileId, Model model) {
         int count = fileService.deleteFile(Integer.parseInt(fileId));
         if (count > 0) {
-            model.addAttribute("successMessage", true);
+            model.addAttribute("success", true);
         } else
-            model.addAttribute("errorMessage", true);
+            model.addAttribute("error", true);
 
         return "result";
     }
 
     @PostMapping("/fileUpload")
     public String handleFileUpload(@RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication, Model model) {
-        try {
-            InputStream fis = fileUpload.getInputStream();
-            File file = new File();
+
+
             boolean success = false;
+            boolean isDuplicate = false;
+            int errorType = 0;
             Integer userId = userService.getUser(authentication.getName()).getUserId();
-            file.setUserId(userService.getUser(authentication.getName()).getUserId());
-            file.setFileName(fileUpload.getOriginalFilename());
-            file.setContentType(fileUpload.getContentType());
-            file.setFileSize("" + fileUpload.getSize());
-            file.setFileData(fileUpload.getBytes());
             List<File> fileList = fileService.getFilesByUserId(userId);
-            for (File fileItem : fileList) {
-                if (fileItem.getFileName().equals(fileUpload.getName())) {
-                    success = false;
 
+            if(fileUpload.getSize() < 1024 * 1024 * 5){
+                for (File file : fileList) {
+                    if(fileUpload.getOriginalFilename().equals(file.getFileName())){
+                        isDuplicate = true;
+                        errorType = 3;
+                    }
                 }
-                success = true;
+
+                if(!isDuplicate && !fileUpload.isEmpty()){
+                    success = fileService.addFile(fileUpload, userId);
+                    errorType = 0;
+                }
             }
-            if (success && fileUpload.getSize() <= 1024 * 1024 * 5) {
-                fileService.addFile(file);
-                model.addAttribute("successMessage", true);
-            } else {
-                model.addAttribute("successMessage", false);
+            else{
+                errorType = 2;
             }
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute("successMessage", false);
-        }
+            model.addAttribute("success", success);
+            model.addAttribute("errorType", errorType);
+
+
         return "result";
     }
 }

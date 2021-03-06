@@ -24,12 +24,19 @@ public class NoteController {
     public String addNote(Authentication authentication, Note note, Model model) {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
         note.setUserId(userId);
+        try{
         Integer count = this.noteService.addOrUpdateNote(note);
         if(count > 0 ){
-            model.addAttribute("successMessage", true);
+            model.addAttribute("success", true);
         }else
-            model.addAttribute("errorMessage", true);
+            model.addAttribute("error", true);
 
+
+        }catch (Exception e){
+            model.addAttribute("success", false);
+            model.addAttribute("errorType", 1);
+            model.addAttribute("errorMessage", "Note can't be saved as description exceed 1000 characters");
+        }
         return "result";
     }
 
@@ -38,9 +45,9 @@ public class NoteController {
         Integer id = Integer.parseInt(noteId);
         Integer count = this.noteService.deleteNote(id);
         if(count > 0 ){
-            model.addAttribute("successMessage", true);
+            model.addAttribute("success", true);
         }else
-            model.addAttribute("errorMessage", true);
+            model.addAttribute("error", true);
 
         return "result";
     }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -29,8 +30,21 @@ public class FileService {
         return fileMapper.findFile(fileId);
     }
 
-    public Integer addFile(File file) {
-       return fileMapper.insert(file);
+    public boolean addFile(MultipartFile multipartFile, Integer userId)  {
+        File file = new File();
+
+        try {
+            file.setUserId(userId);
+            file.setFileName(multipartFile.getOriginalFilename());
+            file.setContentType(multipartFile.getContentType());
+            file.setFileSize("" + multipartFile.getSize());
+            file.setFileData(multipartFile.getBytes());
+            fileMapper.insert(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return  false;
+        }
+        return true;
     }
 
     public Integer deleteFile(Integer id) {
